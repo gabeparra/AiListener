@@ -8,9 +8,17 @@ from caption_ai.llm.router import get_llm_client
 from caption_ai.prompts import build_rolling_summary_prompt
 from caption_ai.storage import Storage
 from caption_ai.config import config
+from caption_ai.web import get_summarizer_running
 from rich.console import Console
 
 console = Console()
+
+# Try to import web broadcast function if available
+try:
+    from caption_ai.web import broadcast_summary
+    _web_available = True
+except ImportError:
+    _web_available = False
 
 
 class Summarizer:
@@ -32,7 +40,8 @@ class Summarizer:
 
     async def run(self) -> None:
         """Run the summarizer loop."""
-        console.print("[green]Summarizer started[/green]")
+        console.print("[bold red]✓ Neural processing units online[/bold red]")
+        console.print("[dim]Awaiting conversation data...[/dim]\n")
         accumulated_segments: list[Segment] = []
 
         while True:
@@ -47,6 +56,11 @@ class Summarizer:
                     self.bus.task_done()
                 except asyncio.TimeoutError:
                     pass
+
+                # Check if summarizer is running (can be paused via UI)
+                if not get_summarizer_running():
+                    await asyncio.sleep(0.5)
+                    continue
 
                 # Check if it's time to summarize
                 now = datetime.now()
@@ -72,7 +86,7 @@ class Summarizer:
             return
 
         console.print(
-            f"[cyan]Summarizing {len(segments)} segments...[/cyan]"
+            f"[yellow]Analyzing {len(segments)} conversation segments...[/yellow]"
         )
         prompt = build_rolling_summary_prompt(
             self.current_summary, segments
@@ -81,7 +95,13 @@ class Summarizer:
         try:
             reply = await self.llm_client.complete(prompt)
             self.current_summary = reply.content
-            console.print(f"[green]Summary:[/green] {reply.content}")
+            await self.storage.append_summary(reply.content)
+            if _web_available:
+                try:
+                    await broadcast_summary(reply.content)
+                except Exception:
+                    pass  # Web not available or no connections
+            console.print(f"[bold green]Glup Analysis:[/bold green] {reply.content}\n")
         except Exception as e:
             console.print(f"[red]LLM error: {e}[/red]")
 

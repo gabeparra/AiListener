@@ -68,3 +68,12 @@ logs/
 Thumbs.db
 .DS_Store
 
+# Node/React
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+web/dist/
+dist/

@@ -1,10 +1,10 @@
-# Caption AI
+# Glup - Advanced Meeting Intelligence
 
-Meeting caption listener + summarizer with pluggable LLM backends.
+Meeting caption listener + summarizer with Glup personality and pluggable LLM backends.
 
 ## Overview
 
-Caption AI is a Python application that listens to meeting captions (or generates fake transcript segments for testing) and produces rolling summaries using configurable LLM backends. It supports OpenAI/ChatGPT, Grok, Gemini, and local models via Ollama.
+Glup is an advanced AI meeting assistant that listens to meeting captions (or generates fake transcript segments for testing) and produces rolling summaries with the calculated, analytical personality of Glup. It supports OpenAI/ChatGPT, Grok, Gemini, and local models via Ollama with full GPU acceleration for RTX 4090 and other NVIDIA GPUs.
 
 ## Architecture
 
@@ -46,24 +46,31 @@ Caption AI is a Python application that listens to meeting captions (or generate
 ### Prerequisites
 
 - Python 3.11+
-- [uv](https://github.com/astral-sh/uv) package manager
+- pip (Python package manager)
+- NVIDIA GPU (RTX 4090 recommended) with drivers installed
 
-### Setup
+### Quick Setup (RTX 4090)
+
+For RTX 4090 systems, see [INSTALL_4090.md](INSTALL_4090.md) for optimized GPU setup.
+
+### Standard Setup
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/gabeparra/UltronListener.git
-cd UltronListener
+git clone https://github.com/gabeparra/AiListener.git
+cd AiListener
 ```
 
-2. Install dependencies with uv:
+2. Create and activate virtual environment:
 ```bash
-uv sync
-```
-
-3. Activate the virtual environment:
-```bash
+python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+3. Install dependencies and package:
+```bash
+pip install -r requirements.txt
+pip install -e .  # Install package in editable mode
 ```
 
 ## Configuration
@@ -84,8 +91,9 @@ GROK_API_KEY=xai-...
 GEMINI_API_KEY=...
 
 # Local Ollama (if using local)
+# For RTX 4090, recommended models: llama3.1:70b, llama3:70b, mistral-nemo:12b
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama2
+OLLAMA_MODEL=llama3.1:70b
 
 # Storage (optional, defaults to ~/.caption_ai/segments.db)
 STORAGE_PATH=~/.caption_ai/segments.db
@@ -93,42 +101,90 @@ STORAGE_PATH=~/.caption_ai/segments.db
 
 ## Usage
 
-### Running with Fake Data
+### Running with React Web UI (Recommended)
 
-The simplest way to test is with fake transcript segments:
+Glup now includes a React frontend with interactive chat! 
+
+**Development mode (with hot reload):**
+
+1. Install Node.js dependencies:
+```bash
+npm install
+```
+
+2. Start React dev server (terminal 1):
+```bash
+npm run dev
+```
+
+3. Start Glup backend (terminal 2):
+```bash
+source .venv/bin/activate
+python -m caption_ai --web --port 8000
+```
+
+4. Open http://localhost:3000 in your browser
+
+**Production mode:**
+
+1. Build React app:
+```bash
+npm run build
+```
+
+2. Start Glup:
+```bash
+python -m caption_ai --web
+```
+
+3. Open http://127.0.0.1:8000
+
+The React web UI provides:
+- **Interactive Chat**: Talk directly with Glup using the chat panel
+- Real-time conversation segments display
+- Live Glup analysis updates
+- WebSocket-based streaming for instant updates
+- Dark theme with Glup's distinctive styling
+- Hot Module Replacement (HMR) for instant development updates
+
+### Running with CLI Only
+
+Run without web UI:
 
 ```bash
 python -m caption_ai
-```
-
-or
-
-```bash
-python -m caption_ai.main
 ```
 
 This will:
 1. Generate fake meeting transcript segments
 2. Store them in SQLite
 3. Produce rolling summaries every 15 seconds using the configured LLM
+4. Display output in the terminal
 
 ### Using Local Ollama
 
-1. Install and start Ollama:
+1. Install Ollama from https://ollama.ai
+
+2. **Start Ollama manually** (it's disabled from auto-start):
 ```bash
-# Install Ollama from https://ollama.ai
-ollama serve
+# Use the control script
+./scripts/control_ollama.sh start
+
+# Or manually
+ollama serve &
 ```
 
-2. Pull a model:
+3. Pull a model:
 ```bash
-ollama pull llama2
+ollama pull llama3.2:3b
 ```
 
-3. Set `LLM_PROVIDER=local` in `.env` and run:
+4. Set `LLM_PROVIDER=local` in `.env` and run:
 ```bash
-python -m caption_ai
+python -m caption_ai --web
 ```
+
+**Important:** Ollama does NOT auto-start to prevent memory issues. Use `./scripts/control_ollama.sh stop` to terminate it when done.
 
 ## Development
 
@@ -136,7 +192,7 @@ python -m caption_ai
 
 ```bash
 # Install with dev dependencies
-uv sync --dev
+pip install -r requirements-dev.txt
 
 # Run linting
 make lint
@@ -199,9 +255,11 @@ Contributions are welcome! Please:
 
 ```bash
 # Clone and setup
-git clone https://github.com/gabeparra/UltronListener.git
-cd UltronListener
-uv sync --dev
+git clone https://github.com/gabeparra/AiListener.git
+cd AiListener
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
 
 # Run tests
 pytest

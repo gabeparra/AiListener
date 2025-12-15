@@ -1,0 +1,54 @@
+.status-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 0.9em;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-indicator.connected {
+  border-color: #00ff00;
+  color: #00ff00;
+}
+
+.status-indicator.disconnected {
+  border-color: #ff0000;
+  color: #ff0000;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.status-indicator.connected .status-dot {
+  background: #00ff00;
+}
+
+.status-indicator.disconnected .status-dot {
+  background: #ff0000;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.status-text {
+  font-weight: bold;
+}
+

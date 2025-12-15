@@ -1,0 +1,103 @@
+.backend-control {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
+}
+
+.backend-control.connected {
+  border-color: #00ff00;
+}
+
+.backend-control.disconnected {
+  border-color: #ff0000;
+}
+
+.backend-control.checking {
+  border-color: #ffaa00;
+}
+
+.backend-status {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.status-text {
+  font-weight: bold;
+  font-size: 1em;
+}
+
+.backend-control.connected .status-text {
+  color: #00ff00;
+}
+
+.backend-control.disconnected .status-text {
+  color: #ff0000;
+}
+
+.backend-control.checking .status-text {
+  color: #ffaa00;
+}
+
+.last-check {
+  font-size: 0.8em;
+  color: #888;
+}
+
+.backend-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.refresh-btn {
+  padding: 8px 16px;
+  background: #ff0000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: #ff3333;
+}
+
+.refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.backend-help {
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.backend-help p {
+  color: #aaa;
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+.backend-help code {
+  background: #1a1a1a;
+  padding: 8px;
+  border-radius: 4px;
+  display: block;
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+  border: 1px solid #333;
+}
+

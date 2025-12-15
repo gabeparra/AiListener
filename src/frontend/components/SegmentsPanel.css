@@ -1,0 +1,46 @@
+.segments-panel {
+  max-height: 400px;
+}
+
+.segments-list {
+  overflow-y: auto;
+  max-height: 350px;
+}
+
+.segment {
+  background: #252525;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-left: 3px solid #ff0000;
+  border-radius: 4px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.segment-time {
+  color: #888;
+  font-size: 0.85em;
+  margin-bottom: 5px;
+}
+
+.segment-speaker {
+  color: #ff6666;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.segment-text {
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
