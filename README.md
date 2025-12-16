@@ -1,3 +1,8 @@
+> ⚠️ This repository is archived and kept for historical purposes.
+>  
+> Active development continues in **ARES**: https://github.com/gabeparra/ares
+
+
 # Glup - Advanced Meeting Intelligence
 
 Meeting caption listener + summarizer with Glup personality and pluggable LLM backends.
